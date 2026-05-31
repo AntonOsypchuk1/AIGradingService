@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -7,18 +8,24 @@ namespace AIGradingService.Api.Services.Llm;
 
 public class OpenRouterLlmClient : ILlmClient
 {
-    public string ModelName => _options.Model;
-    
+    private const int MaxAttempts = 3;
+    private static readonly TimeSpan DefaultRetryDelay = TimeSpan.FromSeconds(60);
+
     private readonly HttpClient _httpClient;
     private readonly OpenRouterOptions _options;
+    private readonly ILogger<OpenRouterLlmClient> _logger;
 
     public OpenRouterLlmClient(
         HttpClient httpClient,
-        IOptions<OpenRouterOptions> options)
+        IOptions<OpenRouterOptions> options,
+        ILogger<OpenRouterLlmClient> logger)
     {
         _httpClient = httpClient;
         _options = options.Value;
+        _logger = logger;
     }
+
+    public string ModelName => _options.Model;
 
     public async Task<string> CompleteAsync(
         string prompt,
@@ -27,7 +34,52 @@ public class OpenRouterLlmClient : ILlmClient
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
             throw new InvalidOperationException("OpenRouter API key is missing.");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, _options.BaseUrl);
+        for (var attempt = 1; attempt <= MaxAttempts; attempt++)
+        {
+            using var request = CreateRequest(prompt);
+
+            using var response = await _httpClient.SendAsync(
+                request,
+                cancellationToken);
+
+            var responseContent = await response.Content.ReadAsStringAsync(
+                cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return ParseOpenRouterContent(responseContent);
+            }
+
+            if (response.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                if (attempt == MaxAttempts)
+                {
+                    throw new InvalidOperationException(
+                        $"OpenRouter request failed after {MaxAttempts} attempts with 429 Too Many Requests. Body: {responseContent}");
+                }
+
+                var delay = GetRetryDelay(response);
+
+                _logger.LogWarning(
+                    "OpenRouter returned 429. Attempt {Attempt}/{MaxAttempts}. Waiting {DelaySeconds} seconds before retry.",
+                    attempt,
+                    MaxAttempts,
+                    delay.TotalSeconds);
+
+                await Task.Delay(delay, cancellationToken);
+                continue;
+            }
+
+            throw new InvalidOperationException(
+                $"OpenRouter request failed: {(int)response.StatusCode} {response.ReasonPhrase}. Body: {responseContent}");
+        }
+
+        throw new InvalidOperationException("OpenRouter request failed unexpectedly.");
+    }
+
+    private HttpRequestMessage CreateRequest(string prompt)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, _options.BaseUrl);
 
         request.Headers.Authorization =
             new AuthenticationHeaderValue("Bearer", _options.ApiKey);
@@ -54,16 +106,29 @@ public class OpenRouterLlmClient : ILlmClient
             Encoding.UTF8,
             "application/json");
 
-        using var response = await _httpClient.SendAsync(request, cancellationToken);
+        return request;
+    }
 
-        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+    private static TimeSpan GetRetryDelay(HttpResponseMessage response)
+    {
+        var retryAfter = response.Headers.RetryAfter;
 
-        if (!response.IsSuccessStatusCode)
+        if (retryAfter?.Delta is not null)
+            return retryAfter.Delta.Value;
+
+        if (retryAfter?.Date is not null)
         {
-            throw new InvalidOperationException(
-                $"OpenRouter request failed: {(int)response.StatusCode} {response.ReasonPhrase}. Body: {responseContent}");
+            var delay = retryAfter.Date.Value - DateTimeOffset.UtcNow;
+
+            if (delay > TimeSpan.Zero)
+                return delay;
         }
 
+        return DefaultRetryDelay;
+    }
+
+    private static string ParseOpenRouterContent(string responseContent)
+    {
         using var json = JsonDocument.Parse(responseContent);
 
         var content = json.RootElement
@@ -82,14 +147,11 @@ public class OpenRouterLlmClient : ILlmClient
     {
         content = content.Trim();
 
-        if (content.StartsWith("```"))
-        {
-            var firstBrace = content.IndexOf('{');
-            var lastBrace = content.LastIndexOf('}');
+        var firstBrace = content.IndexOf('{');
+        var lastBrace = content.LastIndexOf('}');
 
-            if (firstBrace >= 0 && lastBrace > firstBrace)
-                return content[firstBrace..(lastBrace + 1)];
-        }
+        if (firstBrace >= 0 && lastBrace > firstBrace)
+            return content[firstBrace..(lastBrace + 1)];
 
         return content;
     }
