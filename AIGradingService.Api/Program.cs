@@ -1,5 +1,6 @@
 using AIGradingService.Api.Services;
 using AIGradingService.Api.Services.Baselines;
+using AIGradingService.Api.Services.Guardrails;
 using AIGradingService.Api.Services.Llm;
 using AIGradingService.Api.Services.Pipeline;
 using AIGradingService.Api.Services.StaticAnalysis;
@@ -22,9 +23,11 @@ builder.Services.AddScoped<IEvaluationBaseline, StaticAnalysisRuleBasedBaseline>
 builder.Services.AddScoped<IEvaluationBaseline, HybridRuleBasedBaseline>();
 builder.Services.AddScoped<IEvaluationBaseline, LlmOnlyBaseline>();
 builder.Services.AddScoped<IEvaluationBaseline, TestAwareLlmBaseline>();
+builder.Services.AddScoped<IEvaluationBaseline, TestAwareGuardedLlmBaseline>();
 
 builder.Services.AddScoped<EvaluationPipelineService>();
 builder.Services.AddScoped<EvaluationMetricsService>();
+builder.Services.AddScoped<GradingGuardrailService>();
 
 builder.Services.Configure<OpenRouterOptions>(
     builder.Configuration.GetSection("OpenRouter"));
