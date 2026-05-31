@@ -16,7 +16,8 @@ public class PythonExecutionService
         {
             SubmissionId = submission.SubmissionId,
             AssignmentId = submission.AssignmentId,
-            Total = testCases.Count
+            Total = testCases.Count,
+            TotalWeight = testCases.Sum(x => x.Weight <= 0 ? 1 : x.Weight)
         };
 
         foreach (var testCase in testCases)
@@ -26,7 +27,10 @@ public class PythonExecutionService
             result.Results.Add(caseResult);
 
             if (caseResult.Passed)
+            {
                 result.Passed++;
+                result.PassedWeight += caseResult.Weight;
+            }
         }
 
         return result;
@@ -79,7 +83,8 @@ public class PythonExecutionService
                     ExpectedOutput = Normalize(testCase.ExpectedOutput),
                     ActualOutput = "",
                     Error = "Execution timeout.",
-                    Passed = false
+                    Passed = false,
+                    Weight = testCase.Weight <= 0 ? 1 : testCase.Weight,
                 };
             }
 
@@ -95,7 +100,8 @@ public class PythonExecutionService
                 ExpectedOutput = expected,
                 ActualOutput = actual,
                 Error = error.Trim(),
-                Passed = string.IsNullOrWhiteSpace(error) && IsOutputCorrect(actual, expected)
+                Passed = string.IsNullOrWhiteSpace(error) && IsOutputCorrect(actual, expected),
+                Weight = testCase.Weight <= 0 ? 1 : testCase.Weight,
             };
         }
         finally

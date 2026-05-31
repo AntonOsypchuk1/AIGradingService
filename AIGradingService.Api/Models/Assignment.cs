@@ -18,4 +18,7 @@ public class Assignment
 
     [Name("max_score")]
     public int MaxScore { get; set; }
+    
+    [Name("required_concepts")]
+    public string RequiredConcepts { get; set; } = string.Empty;
 }

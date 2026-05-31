@@ -40,7 +40,7 @@ public class DatasetService
 
     private void LoadTestCases()
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "Dataset", "test_cases.csv");
+        var path = Path.Combine(AppContext.BaseDirectory, "Dataset", "test_cases_weighted.csv");
 
         using var reader = new StreamReader(path);
         using var csv = new CsvReader(reader, CreateCsvConfig());

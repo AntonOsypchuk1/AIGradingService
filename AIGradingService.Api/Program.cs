@@ -14,6 +14,7 @@ builder.Services.AddScoped<PythonExecutionService>();
 builder.Services.AddScoped<RuleBasedGradingService>();
 
 builder.Services.AddScoped<IEvaluationBaseline, EqualWeightRuleBasedBaseline>();
+builder.Services.AddScoped<IEvaluationBaseline, WeightedRuleBasedBaseline>();
 
 builder.Services.AddScoped<EvaluationPipelineService>();
 builder.Services.AddScoped<EvaluationMetricsService>();

@@ -37,3 +37,5 @@ D:\Labs\kursach\AIGradingService\AIGradingService.Api\obj\Debug\net10.0\ref\AIGr
 D:\Labs\kursach\AIGradingService\AIGradingService.Api\bin\Debug\net10.0\Dataset\assignments.csv
 D:\Labs\kursach\AIGradingService\AIGradingService.Api\bin\Debug\net10.0\Dataset\submissions.jsonl
 D:\Labs\kursach\AIGradingService\AIGradingService.Api\bin\Debug\net10.0\Dataset\test_cases.csv
+D:\Labs\kursach\AIGradingService\AIGradingService.Api\bin\Debug\net10.0\Dataset\test_cases_weighted.csv
+D:\Labs\kursach\AIGradingService\AIGradingService.Api\obj\Debug\net10.0\AIGradingService.Api.sourcelink.json
