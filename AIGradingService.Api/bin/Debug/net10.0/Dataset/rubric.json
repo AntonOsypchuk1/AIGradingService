@@ -1,0 +1,34 @@
+{
+  "rubric_id": "PYTHON_LAB_GRADING_V1",
+  "max_score": 10,
+  "criteria": [
+    {
+      "name": "correctness",
+      "max_score": 5,
+      "description": "The code produces correct results for normal and edge test cases."
+    },
+    {
+      "name": "completeness",
+      "max_score": 2,
+      "description": "The solution covers all requirements of the assignment."
+    },
+    {
+      "name": "code_quality",
+      "max_score": 2,
+      "description": "The code is readable, simple, and uses appropriate Python constructs."
+    },
+    {
+      "name": "robustness",
+      "max_score": 1,
+      "description": "The code avoids avoidable runtime errors and handles typical inputs safely."
+    }
+  ],
+  "final_decision_policy": "teacher_must_confirm",
+  "risk_flags": [
+    "syntax_error",
+    "runtime_error",
+    "failed_edge_case",
+    "requires_teacher_review",
+    "low_confidence"
+  ]
+}

@@ -1,0 +1,33 @@
+test_case_id,assignment_id,stdin,expected_stdout_contains,weight,notes
+TC_L2_T2_001,L2_T2,2000,leap,2.5,divisible by 400
+TC_L2_T2_002,L2_T2,1900,normal,2.5,century year not divisible by 400
+TC_L2_T2_003,L2_T2,2010,normal,2.5,ordinary non-leap year
+TC_L2_T2_004,L2_T2,2024,leap,2.5,divisible by 4 and not by 100
+TC_L2_T3_001,L2_T3,230,230,2.5,no discount
+TC_L2_T3_002,L2_T3,600,582,2.5,3 percent discount
+TC_L2_T3_003,L2_T3,1100,1045,2.5,5 percent discount
+TC_L2_T3_004,L2_T3,1000,970,2.5,boundary behavior: >500 but not >1000
+TC_L3_T8_001,L3_T8,word,3,2.5,target word appears three times in prepared text
+TC_L3_T8_002,L3_T8,missing,0,2.5,word does not occur
+TC_L3_T8_003,L3_T8,text,1,2.5,single occurrence
+TC_L3_T8_004,L3_T8,wo,0,2.5,substring should not count as full word
+TC_L4_T1_001,L4_T1,"1
+2
+3
+4
+5","5|[5, 4, 3, 2, 1]",2.5,ascending list
+TC_L4_T1_002,L4_T1,"5
+4
+3
+2
+1","5|[1, 2, 3, 4, 5]",2.5,descending list
+TC_L4_T1_003,L4_T1,"-1
+-5
+0
+2
+2","2|[2, 2, 0, -5, -1]",2.5,negative and duplicate values
+TC_L4_T1_004,L4_T1,"10
+10
+10
+10
+10","10|[10, 10, 10, 10, 10]",2.5,all equal values

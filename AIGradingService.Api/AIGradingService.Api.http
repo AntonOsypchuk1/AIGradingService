@@ -1,0 +1,5 @@
+@AIGradingService.Api_HostAddress = http://localhost:5042
+
+Accept: application/json
+
+###

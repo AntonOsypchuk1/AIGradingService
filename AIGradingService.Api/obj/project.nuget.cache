@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "Z9CVXeHr6QI=",
+  "success": true,
+  "projectFilePath": "D:\\Labs\\kursach\\AIGradingService\\AIGradingService.Api\\AIGradingService.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\osypc\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
+    "C:\\Users\\osypc\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.7\\microsoft.aspnetcore.openapi.10.0.7.nupkg.sha512",
+    "C:\\Users\\osypc\\.nuget\\packages\\microsoft.extensions.apidescription.server\\10.0.0\\microsoft.extensions.apidescription.server.10.0.0.nupkg.sha512",
+    "C:\\Users\\osypc\\.nuget\\packages\\microsoft.openapi\\2.4.1\\microsoft.openapi.2.4.1.nupkg.sha512",
+    "C:\\Users\\osypc\\.nuget\\packages\\swashbuckle.aspnetcore\\10.2.0\\swashbuckle.aspnetcore.10.2.0.nupkg.sha512",
+    "C:\\Users\\osypc\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\10.2.0\\swashbuckle.aspnetcore.swagger.10.2.0.nupkg.sha512",
+    "C:\\Users\\osypc\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.2.0\\swashbuckle.aspnetcore.swaggergen.10.2.0.nupkg.sha512",
+    "C:\\Users\\osypc\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.2.0\\swashbuckle.aspnetcore.swaggerui.10.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}
