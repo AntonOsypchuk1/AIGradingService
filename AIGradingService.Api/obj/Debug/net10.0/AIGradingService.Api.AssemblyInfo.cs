@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2f7d2d086c6f65ebba6982830983d7334f0233ea")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e026c5cdac29b6305205ceaeb02d53220322ff0d")]
 [assembly: System.Reflection.AssemblyProductAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

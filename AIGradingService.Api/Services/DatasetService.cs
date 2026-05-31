@@ -29,7 +29,7 @@ public class DatasetService
 
     private void LoadAssignments()
     {
-        var path = Path.Combine(AppContext.BaseDirectory, "Dataset", "assignments.csv");
+        var path = Path.Combine(AppContext.BaseDirectory, "Dataset", "assignments_with_required_concepts.csv");
 
         using var reader = new StreamReader(path);
         using var csv = new CsvReader(reader, CreateCsvConfig());
