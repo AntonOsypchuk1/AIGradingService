@@ -20,11 +20,25 @@ builder.Services.AddScoped<IEvaluationBaseline, EqualWeightRuleBasedBaseline>();
 builder.Services.AddScoped<IEvaluationBaseline, WeightedRuleBasedBaseline>();
 builder.Services.AddScoped<IEvaluationBaseline, StaticAnalysisRuleBasedBaseline>();
 builder.Services.AddScoped<IEvaluationBaseline, HybridRuleBasedBaseline>();
-
-builder.Services.AddScoped<ILlmClient, FakeLlmClient>();
+builder.Services.AddScoped<IEvaluationBaseline, LlmOnlyBaseline>();
+builder.Services.AddScoped<IEvaluationBaseline, TestAwareLlmBaseline>();
 
 builder.Services.AddScoped<EvaluationPipelineService>();
 builder.Services.AddScoped<EvaluationMetricsService>();
+
+builder.Services.Configure<OpenRouterOptions>(
+    builder.Configuration.GetSection("OpenRouter"));
+
+var llmProvider = builder.Configuration["Llm:Provider"];
+
+if (string.Equals(llmProvider, "OpenRouter", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddHttpClient<ILlmClient, OpenRouterLlmClient>();
+}
+else
+{
+    builder.Services.AddScoped<ILlmClient, FakeLlmClient>();
+}
 
 var app = builder.Build();
 

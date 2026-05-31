@@ -3,6 +3,7 @@ namespace AIGradingService.Api.Models.Evaluation;
 public class EvaluationGrade
 {
     public string BaselineName { get; set; } = string.Empty;
+    public string ModelName { get; set; } = string.Empty;
 
     public string SubmissionId { get; set; } = string.Empty;
     public string AssignmentId { get; set; } = string.Empty;

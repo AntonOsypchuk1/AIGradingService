@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("a6dd1915-4af1-4a7c-9b2a-86933cad8cfb")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e026c5cdac29b6305205ceaeb02d53220322ff0d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+46f3020f234e2b7e2e936ac78a7f7f70439e67c5")]
 [assembly: System.Reflection.AssemblyProductAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

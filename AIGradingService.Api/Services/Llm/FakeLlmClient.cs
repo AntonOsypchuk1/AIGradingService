@@ -5,6 +5,8 @@ namespace AIGradingService.Api.Services.Llm;
 
 public class FakeLlmClient : ILlmClient
 {
+    public string ModelName => "fake-llm";
+    
     public Task<string> CompleteAsync(string prompt, CancellationToken cancellationToken = default)
     {
         var predictedScore = EstimateFakeScore(prompt);

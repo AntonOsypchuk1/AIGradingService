@@ -4,16 +4,16 @@ using AIGradingService.Api.Services.Llm;
 
 namespace AIGradingService.Api.Services.Baselines;
 
-public class LlmOnlyBaseline : IEvaluationBaseline
+public class TestAwareLlmBaseline : IEvaluationBaseline
 {
     private readonly ILlmClient _llmClient;
 
-    public LlmOnlyBaseline(ILlmClient llmClient)
+    public TestAwareLlmBaseline(ILlmClient llmClient)
     {
         _llmClient = llmClient;
     }
 
-    public string Name => "llm_only_grading";
+    public string Name => "test_aware_llm_grading";
 
     public async Task<EvaluationGrade> EvaluateAsync(
         BaselineEvaluationContext context,
@@ -21,6 +21,7 @@ public class LlmOnlyBaseline : IEvaluationBaseline
     {
         var assignment = context.Assignment;
         var submission = context.Submission;
+        var testRun = context.TestRun;
 
         var prompt = BuildPrompt(context);
 
@@ -59,11 +60,11 @@ public class LlmOnlyBaseline : IEvaluationBaseline
             PredictedScore = predictedScore,
             AbsoluteError = Math.Abs(predictedScore - submission.ExpectedScore),
 
-            PassedTests = context.TestRun.Passed,
-            TotalTests = context.TestRun.Total,
-            PassedWeight = context.TestRun.PassedWeight,
-            TotalWeight = context.TestRun.TotalWeight,
-            PassRate = Math.Round(context.TestRun.WeightedPassRate, 4),
+            PassedTests = testRun.Passed,
+            TotalTests = testRun.Total,
+            PassedWeight = testRun.PassedWeight,
+            TotalWeight = testRun.TotalWeight,
+            PassRate = Math.Round(testRun.WeightedPassRate, 4),
 
             Criteria = llmResult.Criteria,
             RiskFlags = riskFlags,
@@ -75,17 +76,47 @@ public class LlmOnlyBaseline : IEvaluationBaseline
     {
         var assignment = context.Assignment;
         var submission = context.Submission;
+        var testRun = context.TestRun;
+
+        var failedCases = testRun.Results
+            .Where(x => !x.Passed)
+            .Select(x =>
+                $"""
+                Input: {x.Input}
+                Expected output: {x.ExpectedOutput}
+                Actual output: {x.ActualOutput}
+                Error: {x.Error}
+                Weight: {x.Weight}
+                """);
+
+        var failedCasesText = string.Join("\n---\n", failedCases);
+
+        if (string.IsNullOrWhiteSpace(failedCasesText))
+            failedCasesText = "No failed test cases.";
 
         return $$"""
         You are an AI assistant for grading introductory Python programming assignments.
 
         Grade the student's code from 0 to {{assignment.MaxScore}}.
 
-        Important:
-        - Do not make a final decision.
-        - The teacher must review the result.
-        - Return only valid JSON.
-        - Use the following JSON schema:
+        This is not a final grade. A teacher must review the result.
+
+        Use the rubric:
+        - correctness: 0 to 5 points
+        - completeness: 0 to 3 points
+        - code_quality: 0 to 2 points
+
+        Important grading rules:
+        - Use test results as strong evidence.
+        - If tests fail, explain which behavior is incorrect.
+        - Do not give a high correctness score if important weighted tests fail.
+        - If the code has runtime errors, mark it with a risk flag.
+        - The sum of criterion scores must equal predictedScore.
+        - Return only raw JSON.
+        - Do not use markdown.
+        - Do not wrap the response in ```json.
+
+        JSON schema:
         {
           "predictedScore": number,
           "criteria": [
@@ -114,18 +145,22 @@ public class LlmOnlyBaseline : IEvaluationBaseline
 
         Assignment id: {{assignment.AssignmentId}}
         Topic: {{assignment.Topic}}
+
         Task:
         {{assignment.TaskText}}
-
-        Variant_type: {{submission.VariantType}}
 
         Student code:
         ```python
         {{submission.StudentCode}}
         ```
-        
-        Return only raw JSON. Do not use markdown. Do not wrap the result in ```json.
-        The sum of criterion scores must equal predictedScore.
+
+        Test summary:
+        Passed tests: {{testRun.Passed}} / {{testRun.Total}}
+        Passed weighted score: {{testRun.PassedWeight}} / {{testRun.TotalWeight}}
+        Weighted pass rate: {{Math.Round(testRun.WeightedPassRate, 4)}}
+
+        Failed test cases:
+        {{failedCasesText}}
         """;
     }
 }
