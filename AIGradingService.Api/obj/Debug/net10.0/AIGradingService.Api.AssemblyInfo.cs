@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+078b1e0365751c0c07d37fe8ae725c3a0215a211")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2f33ffad1c2568e5d9e13094f1c56dd2f98ec4a0")]
 [assembly: System.Reflection.AssemblyProductAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AIGradingService.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
